@@ -1,0 +1,13 @@
+FROM node:10
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# Install app dependencies
+COPY API/package.json /usr/src/app/
+RUN npm install
+
+COPY ./API /usr/src/app
+
+EXPOSE 3000
+CMD [ "node", "index.js" ]
