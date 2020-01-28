@@ -10,6 +10,8 @@ services:
     hostname: reverseproxy
     environment:
       - NGINX_PORT=80
+    networks:
+      - nodejs-network
   apinode:
     build:
       context: ./Nodejs
@@ -19,13 +21,33 @@ services:
     environment:
       - NODE_ENV=development
       - API_PORT=3000
+      - DB_HOST=postgres  
+      - DB_PORT=5432     
+      - DB_NAME=database
+      - DB_USER=postgres
+      - DB_PASSWORD=root
+      - REDIS_HOST=redis     
+    networks:
+      - nodejs-network
+      - db-network
       
   postgres:
     image: postgres
     restart: on-failure
     environment:
+        POSTGRES_USER: postgres
         POSTGRES_PASSWORD: root
+        POSTGRES_DB: database
+        PGDATA: /tmp
+    networks:
+      - nodejs-network
 
   redis:
     image: redis
     restart: on-failure
+    networks:
+      - db-network
+
+networks:
+  db-network:
+  nodejs-network:

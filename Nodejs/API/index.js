@@ -14,6 +14,11 @@ app.get('/', (req, res) => {
   }));
 });
 
+
+const redis = require('redis');
+const client = redis.createClient({ host: process.env.REDIS_HOST });
+
+
 app.get('/status', async (req, res) => {
 
   let pg_uptime = JSON.parse(JSON.stringify(await getPGuptime()))[0]["uptime"]
@@ -21,17 +26,17 @@ app.get('/status', async (req, res) => {
   res.send(JSON.stringify({
     status: "OK",
     postgresUptime: pg_uptime,
-    redisConnectedClients: 123
+    redisConnectedClients: Number(client.server_info.connected_clients)
   }));
 });
 
 const Pool = require('pg').Pool;
 const pool = new Pool({
-  user: 'postgres',
-  host: '0.0.0.0',
-  database: 'postgres',
-  password: 'postgres',
-  port: 5432,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
 async function getPGuptime() {
