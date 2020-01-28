@@ -1,0 +1,16 @@
+version: '3'
+services:
+  webserver:
+    build: nginx_dockerfile
+    ports: 
+      - 3000:3000    
+  db:
+    image: postgres
+    restart: always
+    environment:
+        POSTGRES_PASSWORD: root
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080    
