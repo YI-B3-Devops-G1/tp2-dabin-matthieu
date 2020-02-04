@@ -39,6 +39,8 @@ services:
         POSTGRES_PASSWORD: root
         POSTGRES_DB: database
         PGDATA: /tmp
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
     networks:
       - nodejs-network
 
